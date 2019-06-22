@@ -36,7 +36,6 @@ def attention_callback(attention_value):
 		for i in range(len(arr3)-1):
 			arr3[i]=arr3[i+1]
 		arr3[2047]=attention_value
-		print attention_value
 		if(cnter==512):
 			global qwe
 			global val
@@ -63,10 +62,10 @@ def attention_callback(attention_value):
 				# return None
 			with open('dataclass/dataset1024.csv', 'wb') as f:
 				writer = csv.writer(f)
-				writer.writerow([object1.attention, object1.meditation, object1.poorSignal, arr, val])
+				writer.writerow([object1.attention, object1.meditation, object1.poorSignal, arr2, val])
 			with open('datahistory/dataset1024-'+ts+'.csv', 'ab') as f:
 				writer = csv.writer(f)
-				writer.writerow([object1.attention, object1.meditation, object1.poorSignal, arr, val])
+				writer.writerow([object1.attention, object1.meditation, object1.poorSignal, arr2, val])
 				
 			cnter2=0
 			
@@ -81,10 +80,10 @@ def attention_callback(attention_value):
 				# return None
 			with open('dataclass/dataset2048.csv', 'wb') as f:
 				writer = csv.writer(f)
-				writer.writerow([object1.attention, object1.meditation, object1.poorSignal, arr, val])
+				writer.writerow([object1.attention, object1.meditation, object1.poorSignal, arr3, val])
 			with open('datahistory/dataset2048-'+ts+'.csv', 'ab') as f:
 				writer = csv.writer(f)
-				writer.writerow([object1.attention, object1.meditation, object1.poorSignal, arr, val])
+				writer.writerow([object1.attention, object1.meditation, object1.poorSignal, arr3, val])
 				
 			cnter3=0
 			print("data taking completed")
@@ -104,7 +103,7 @@ try:
 except:
 	sys.exit()
 sys.exit()
-	print(sys.exc_info()[0])
+
 while True:
 	if(object1.meditation>100): #another way of accessing data provided by headset (1st being call backs) 
 		print "medidation too much"

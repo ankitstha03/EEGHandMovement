@@ -25,21 +25,23 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 import combine
 
+path=os.getcwd()
 combine.combinecsv()
 ts=time.strftime("%d%b%y%H%M")
 # fix random seed for reproducibility
 np.random.seed(7)
 # load the dataset but only keep the top n words, zero the rest
 counta=0
-data512 = pd.read_csv('datacombined/dataset512.csv', names=['att','med','poo','rawValue','label'])
+os.chdir(path+'/datacombined')
+data512 = pd.read_csv('dataset512.csv', names=['att','med','poo','rawValue','label'])
 X_train512=data512.rawValue.tolist()
 y_train512=data512.label.tolist()
 
-data1024 = pd.read_csv('datacombined/dataset1024.csv', names=['att','med','poo','rawValue','label'])
+data1024 = pd.read_csv('dataset1024.csv', names=['att','med','poo','rawValue','label'])
 X_train1024=data1024.rawValue.tolist()
 y_train1024=data1024.label.tolist()
 
-data2048 = pd.read_csv('datacombined/dataset2048.csv', names=['att','med','poo','rawValue','label'])
+data2048 = pd.read_csv('dataset2048.csv', names=['att','med','poo','rawValue','label'])
 X_train2048=data2048.rawValue.tolist()
 y_train2048=data2048.label.tolist()
 
@@ -55,6 +57,7 @@ y_train512=np.array(y_train512)
 y_train512 = y_train512.reshape(len(y_train512), 1)
 y_train512 = np_utils.to_categorical(y_train512)
 num_classes512 = y_train512.shape[1]
+print (y_train512)
 
 tsts=[]
 for i in range(len(X_train1024)):
@@ -91,16 +94,18 @@ model512.add(Attention())
 model512.add(Dense(num_classes512, activation='softmax'))
 model512.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model512.summary())
-history512=model512.fit(X_train512, y_train512, epochs=37, batch_size=50, validation_split=0.2)
+history512=model512.fit(X_train512, y_train512, epochs=2, batch_size=50, validation_split=0.2)
 
-model512.save('currentmodel/model512.h5')
-model512.save('historymodel/model512org'+ts+'.h5')
+os.chdir(path+'/currentmodel')
+model512.save('model512.h5')
+os.chdir(path+'/historymodel')
+model512.save('model512org'+ts+'.h5')
 
 print("Saved 512 model to disk")
 
 
 model1024 = Sequential()
-model1024.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2, return_sequences=True ,input_shape=(512,1)))
+model1024.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2, return_sequences=True ,input_shape=(512,2)))
 model1024.add(Dropout(0.25))
 model1024.add(LeakyReLU(alpha=0.05))
 model1024.add(LSTM(512, dropout=0.1, activation='tanh', recurrent_dropout=0.1,return_sequences=True))
@@ -108,16 +113,18 @@ model1024.add(Attention())
 model1024.add(Dense(num_classes1024, activation='softmax'))
 model1024.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model1024.summary())
-history1024=model1024.fit(X_train1024, y_train1024, epochs=37, batch_size=50, validation_split=0.2)
+history1024=model1024.fit(X_train1024, y_train1024, epochs=2, batch_size=50, validation_split=0.2)
 
-model1024.save('currentmodel/model1024.h5')
-model1024.save('historymodelmodel1024org'+ts+'.h5')
+os.chdir(path+'/currentmodel')
+model1024.save('model1024.h5')
+os.chdir(path+'/historymodel')
+model1024.save('model1024org'+ts+'.h5')
 
 print("Saved 512 model to disk")
 
 
 model2048 = Sequential()
-model2048.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2, return_sequences=True ,input_shape=(512,1)))
+model2048.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2, return_sequences=True ,input_shape=(512,4)))
 model2048.add(Dropout(0.25))
 model2048.add(LeakyReLU(alpha=0.05))
 model2048.add(LSTM(512, dropout=0.1, activation='tanh', recurrent_dropout=0.1,return_sequences=True))
@@ -125,10 +132,12 @@ model2048.add(Attention())
 model2048.add(Dense(num_classes2048, activation='softmax'))
 model2048.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print(model2048.summary())
-history2048=model2048.fit(X_train2048, y_train2048, epochs=37, batch_size=50, validation_split=0.2)
+history2048=model2048.fit(X_train2048, y_train2048, epochs=2, batch_size=50, validation_split=0.2)
 
-model2048.save('currentmodel/model2048.h5')
-model2048.save('historymodel/model2048org'+ts+'.h5')
+os.chdir(path+'/currentmodel')
+model2048.save('model2048.h5')
+os.chdir(path+'/historymodel')
+model2048.save('model2048org'+ts+'.h5')
 
 print("Saved 512 model to disk")
 
@@ -137,7 +146,7 @@ print(history512.history.keys())
 #  "Accuracy"
 plt.plot(history512.history['acc'], 'r--')
 plt.plot(history512.history['val_acc'])
-plt.title('model accuracy')
+plt.title('model accuracy 512')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
@@ -145,7 +154,7 @@ plt.show()
 # "Loss"
 plt.plot(history512.history['loss'], 'r--')
 plt.plot(history512.history['val_loss'])
-plt.title('model loss')
+plt.title('model loss 512')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
@@ -155,7 +164,7 @@ print(history1024.history.keys())
 #  "Accuracy"
 plt.plot(history1024.history['acc'], 'r--')
 plt.plot(history1024.history['val_acc'])
-plt.title('model accuracy')
+plt.title('model accuracy 1024')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
@@ -163,7 +172,7 @@ plt.show()
 # "Loss"
 plt.plot(history1024.history['loss'], 'r--')
 plt.plot(history1024.history['val_loss'])
-plt.title('model loss')
+plt.title('model loss 1024')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
@@ -173,7 +182,7 @@ print(history2048.history.keys())
 #  "Accuracy"
 plt.plot(history2048.history['acc'], 'r--')
 plt.plot(history2048.history['val_acc'])
-plt.title('model accuracy')
+plt.title('model accuracy 2048')
 plt.ylabel('accuracy')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
@@ -181,7 +190,7 @@ plt.show()
 # "Loss"
 plt.plot(history2048.history['loss'], 'r--')
 plt.plot(history2048.history['val_loss'])
-plt.title('model loss')
+plt.title('model loss 2048')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
