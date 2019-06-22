@@ -11,9 +11,9 @@ import time
 ts=time.strftime("%d%b%y%H%M")
 ts2=time.strftime("%d%b%y")
 
-model512 = load_model('model512.h5' custom_objects={"Attention":Attention})
-model1024 = load_model('model1024.h5' custom_objects={"Attention":Attention})
-model2048 = load_model('model2048.h5' custom_objects={"Attention":Attention})
+model512 = load_model('currentmodel/model512.h5' custom_objects={"Attention":Attention})
+model1024 = load_model('currentmodel/model1024.h5' custom_objects={"Attention":Attention})
+model2048 = load_model('currentmodel/model2048.h5' custom_objects={"Attention":Attention})
 
 print("Loaded model from disk")
 #webbrowser.open('http://169.254.184.158:8000/iot/home', new=2)
@@ -21,9 +21,9 @@ print("Loaded model from disk")
 while(True):
 
 	exit_code = call("py -2 nskydatapoor.py", shell=True)
-	data512 = pd.read_csv('dataset512.csv', names=['att','med','poo','rawValue','label'])
-	data1024 = pd.read_csv('dataset1024.csv', names=['att','med','poo','rawValue','label'])
-	data2048 = pd.read_csv('dataset2048.csv', names=['att','med','poo','rawValue','label'])
+	data512 = pd.read_csv('dataclass/dataset512.csv', names=['att','med','poo','rawValue','label'])
+	data1024 = pd.read_csv('dataclass/dataset1024.csv', names=['att','med','poo','rawValue','label'])
+	data2048 = pd.read_csv('dataclass/dataset2048.csv', names=['att','med','poo','rawValue','label'])
 
 	counter = 0
 	
